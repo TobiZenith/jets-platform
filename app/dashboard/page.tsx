@@ -39,14 +39,18 @@ export default function StudentsPage() {
           <p className="text-xs text-gray-400 uppercase font-bold mb-4 px-2">Main Menu</p>
           <nav className="flex flex-col gap-1">
             {[
-              { icon: "🏠", label: "Dashboard", href: "/dashboard" },
-              { icon: "🎓", label: "Students", href: "/dashboard/students", active: true },
-              { icon: "👩‍🏫", label: "Teachers", href: "/dashboard/teachers" },
-              { icon: "📚", label: "Classes", href: "/dashboard/classes" },
-              { icon: "📊", label: "Grades", href: "/dashboard/grades" },
-              { icon: "📅", label: "Attendance", href: "/dashboard/attendance" },
-              { icon: "📢", label: "Announcements", href: "/dashboard/announcements" },
-              { icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
+            { icon: "🏠", label: "Dashboard", href: "/dashboard", active: true },
+{ icon: "🎓", label: "Students", href: "/dashboard/students" },
+{ icon: "👩‍🏫", label: "Teachers", href: "/dashboard/teachers" },
+{ icon: "📚", label: "Classes", href: "/dashboard/classes" },
+{ icon: "📊", label: "Grades", href: "/dashboard/grades" },
+{ icon: "📅", label: "Attendance", href: "/dashboard/attendance" },
+{ icon: "📢", label: "Announcements", href: "/dashboard/announcements" },
+{ icon: "📋", label: "Report Cards", href: "/dashboard/reports" },
+{ icon: "💰", label: "Fees", href: "/dashboard/fees" },
+{ icon: "🗓️", label: "Timetable", href: "/dashboard/timetable" },
+{ icon: "👨‍👩‍👧", label: "Parent Portal", href: "/parent" },
+{ icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
             ].map((item, i) => (
               <a key={i} href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
