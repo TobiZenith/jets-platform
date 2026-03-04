@@ -16,7 +16,6 @@ export default function RegisterPage() {
   }
 
   const handleSubmit = async () => {
-    console.log("Button clicked!", form)
     setError("")
 
     if (!form.schoolName || !form.address || !form.type || !form.firstName || !form.lastName || !form.email || !form.password) {
@@ -80,17 +79,17 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Name</label>
                 <input name="schoolName" onChange={handleChange} type="text" placeholder="e.g. Greenfield Academy"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Address</label>
                 <input name="address" onChange={handleChange} type="text" placeholder="e.g. 12 School Road, Lagos"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Type</label>
                 <select name="type" onChange={handleChange}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white text-gray-500">
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white">
                   <option value="">Select school type</option>
                   <option value="primary">Primary School</option>
                   <option value="secondary">Secondary / High School</option>
@@ -107,23 +106,23 @@ export default function RegisterPage() {
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
                   <input name="firstName" onChange={handleChange} type="text" placeholder="John"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
                   <input name="lastName" onChange={handleChange} type="text" placeholder="Doe"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Email Address</label>
                 <input name="email" onChange={handleChange} type="email" placeholder="admin@school.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Phone Number</label>
                 <input name="phone" onChange={handleChange} type="tel" placeholder="+234 800 000 0000"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
             </div>
           </div>
@@ -134,12 +133,12 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Password</label>
                 <input name="password" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Confirm Password</label>
                 <input name="confirmPassword" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
             </div>
           </div>
