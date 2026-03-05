@@ -26,17 +26,39 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   }
 }
 
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await params
+    const body = await req.json()
+    const { firstName, lastName, studentId, classId } = body
+
+    if (!firstName || !lastName || !studentId) {
+      return NextResponse.json({ error: "Please fill in all required fields" }, { status: 400 })
+    }
+
+    const student = await prisma.student.update({
+      where: { id },
+      data: {
+        firstName,
+        lastName,
+        studentId,
+        classId: classId || null,
+      }
+    })
+
+    return NextResponse.json(student)
+  } catch (error) {
+    if (error instanceof Error) console.error("Error:", error.message)
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
+  }
+}
+
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    
-    // Delete related records first
     await prisma.grade.deleteMany({ where: { studentId: id } })
     await prisma.attendance.deleteMany({ where: { studentId: id } })
-    
-    // Then delete the student
     await prisma.student.delete({ where: { id } })
-    
     return NextResponse.json({ success: true })
   } catch (error) {
     if (error instanceof Error) console.error("Delete error:", error.message)
