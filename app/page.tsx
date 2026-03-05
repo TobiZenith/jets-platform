@@ -4,7 +4,7 @@ export default function Home() {
 
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-4 bg-white shadow-sm sticky top-0 z-50">
-       <img src="/images/logo.jpeg" alt="JETS" className="h-10 w-auto" />
+       <img src="/images/logo.jpeg" alt="JETS" className="h-25 w-auto" />
         <div className="hidden md:flex gap-8 text-gray-600 text-sm font-medium">
           <a href="#features" className="hover:text-blue-600 transition">Features</a>
           <a href="#how-it-works" className="hover:text-blue-600 transition">How It Works</a>

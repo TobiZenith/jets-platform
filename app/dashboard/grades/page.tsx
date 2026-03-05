@@ -67,7 +67,7 @@ export default function GradesPage() {
 
       {/* Navbar */}
       <nav className="bg-white shadow-sm px-8 py-4 flex items-center justify-between sticky top-0 z-50">
-        <img src="/images/logo.jpeg" alt="JETS" className="h-10 w-auto" />
+        <img src="/images/logo.jpeg" alt="JETS" className="h-25 w-auto" />
         <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
           ← Back to Dashboard
         </Link>
