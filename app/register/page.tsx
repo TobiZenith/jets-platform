@@ -56,11 +56,8 @@ export default function RegisterPage() {
       <div className="bg-white rounded-3xl shadow-lg p-10 w-full max-w-lg">
 
         <div className="text-center mb-8">
-          <a href="/" className="text-3xl font-extrabold tracking-widest mb-2 inline-block hover:opacity-80 transition">
-            <span className="text-blue-600">J</span>
-            <span className="text-pink-500">E</span>
-            <span className="text-yellow-400">T</span>
-            <span className="text-green-500">S</span>
+          <a href="/" className="inline-block hover:opacity-80 transition mb-2">
+            <img src="/images/logo.jpeg" alt="JETS" className="h-12 w-auto mx-auto" />
           </a>
           <h2 className="text-xl font-bold text-gray-800">Register Your School</h2>
           <p className="text-gray-400 text-sm mt-1">Get your school up and running in minutes</p>
@@ -79,17 +76,17 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Name</label>
                 <input name="schoolName" onChange={handleChange} type="text" placeholder="e.g. Greenfield Academy"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Address</label>
                 <input name="address" onChange={handleChange} type="text" placeholder="e.g. 12 School Road, Lagos"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Type</label>
                 <select name="type" onChange={handleChange}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white">
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white text-gray-500">
                   <option value="">Select school type</option>
                   <option value="primary">Primary School</option>
                   <option value="secondary">Secondary / High School</option>
@@ -106,23 +103,23 @@ export default function RegisterPage() {
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
                   <input name="firstName" onChange={handleChange} type="text" placeholder="John"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
                   <input name="lastName" onChange={handleChange} type="text" placeholder="Doe"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Email Address</label>
                 <input name="email" onChange={handleChange} type="email" placeholder="admin@school.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Phone Number</label>
                 <input name="phone" onChange={handleChange} type="tel" placeholder="+234 800 000 0000"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
             </div>
           </div>
@@ -133,12 +130,12 @@ export default function RegisterPage() {
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Password</label>
                 <input name="password" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Confirm Password</label>
                 <input name="confirmPassword" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
             </div>
           </div>

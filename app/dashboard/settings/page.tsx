@@ -64,12 +64,8 @@ export default function SettingsPage() {
 
       {/* Navbar */}
       <nav className="bg-white shadow-sm px-8 py-4 flex items-center justify-between sticky top-0 z-50">
-        <div className="text-2xl font-extrabold tracking-widest">
-          <span className="text-blue-600">J</span>
-          <span className="text-pink-500">E</span>
-          <span className="text-yellow-400">T</span>
-          <span className="text-green-500">S</span>
-        </div>
+        <img src="/images/logo.jpeg            <img src="/images/logo.jpeg" alt="JETS" className="h-12 w-auto mx-auto" />
+          </a>" alt="JETS" className="h-10 w-auto" />
         <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
           ← Back to Dashboard
         </Link>

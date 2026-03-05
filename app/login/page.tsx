@@ -47,11 +47,8 @@ export default function LoginPage() {
       <div className="bg-white rounded-3xl shadow-lg p-10 w-full max-w-md">
 
         <div className="text-center mb-8">
-          <a href="/" className="text-3xl font-extrabold tracking-widest mb-2 inline-block hover:opacity-80 transition">
-            <span className="text-blue-600">J</span>
-            <span className="text-pink-500">E</span>
-            <span className="text-yellow-400">T</span>
-            <span className="text-green-500">S</span>
+          <a href="/" className="inline-block hover:opacity-80 transition mb-2">
+            <img src="/images/logo.jpeg" alt="JETS" className="h-12 w-auto mx-auto" />
           </a>
           <h2 className="text-xl font-bold text-gray-800">Welcome Back!</h2>
           <p className="text-gray-400 text-sm mt-1">Log in to your school dashboard</p>
