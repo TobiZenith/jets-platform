@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     // Check if school code exists
     const school = await prisma.school.findFirst({
-      where: { code: schoolCode }
+      where: { code : schoolCode }
     })
 
     if (!school) {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     console.log("School ID:", school.id)
     console.log("Student found:", student)
     console.log("Student schoolId:", student?.schoolId)
-    
+
     if (!student || student.schoolId !== school.id) {
       return NextResponse.json({ error: "Student ID not found in this school. Please check with your admin." }, { status: 400 })
     }
