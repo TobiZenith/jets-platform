@@ -2,6 +2,15 @@ import { NextResponse } from "next/server"
 import { prisma } from "../../lib/prisma"
 import bcrypt from "bcryptjs"
 
+function generateSchoolCode() {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  const numbers = "0123456789"
+  let code = "JETS-"
+  for (let i = 0; i < 3; i++) code += letters[Math.floor(Math.random() * letters.length)]
+  for (let i = 0; i < 3; i++) code += numbers[Math.floor(Math.random() * numbers.length)]
+  return code
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -22,12 +31,21 @@ export async function POST(req: Request) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    // Generate unique school code
+    let schoolCode = generateSchoolCode()
+    let codeExists = await prisma.school.findUnique({ where: { code: schoolCode } })
+    while (codeExists) {
+      schoolCode = generateSchoolCode()
+      codeExists = await prisma.school.findUnique({ where: { code: schoolCode } })
+    }
+
     // Create the school
     const school = await prisma.school.create({
       data: {
         name: schoolName,
         address,
         type,
+        code: schoolCode,
       }
     })
 
@@ -50,7 +68,7 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Registration error:", JSON.stringify(error, null, 2))
-if (error instanceof Error) console.error("Message:", error.message)
+    if (error instanceof Error) console.error("Message:", error.message)
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 500 }

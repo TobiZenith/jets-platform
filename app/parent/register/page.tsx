@@ -7,7 +7,7 @@ export default function ParentRegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [form, setForm] = useState({
-    firstName: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", studentId: ""
+    firstName: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", studentId: "", schoolCode: ""
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,28 +16,22 @@ export default function ParentRegisterPage() {
 
   const handleSubmit = async () => {
     setError("")
-
-    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.studentId) {
+    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.studentId || !form.schoolCode) {
       setError("Please fill in all fields")
       return
     }
-
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match")
       return
     }
-
     setLoading(true)
-
     try {
       const res = await fetch("/api/parent/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form)
       })
-
       const data = await res.json()
-
       if (!res.ok) {
         setError(data.error || "Something went wrong")
       } else {
@@ -98,12 +92,20 @@ export default function ParentRegisterPage() {
           </div>
 
           <div className="bg-green-50 rounded-2xl p-4">
-            <p className="text-green-600 font-bold text-sm mb-3">🎓 Your Child's Information</p>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">Child's Student ID</label>
-              <input name="studentId" onChange={handleChange} type="text" placeholder="e.g. STU001"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition bg-white" />
-              <p className="text-gray-400 text-xs mt-1">Ask your school admin for your child's Student ID</p>
+            <p className="text-green-600 font-bold text-sm mb-3">🏫 School Information</p>
+            <div className="flex flex-col gap-3">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">School Code</label>
+                <input name="schoolCode" onChange={handleChange} type="text" placeholder="e.g. JETS-ABC123"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition bg-white" />
+                <p className="text-gray-400 text-xs mt-1">Ask your school admin for the school code</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Child's Student ID</label>
+                <input name="studentId" onChange={handleChange} type="text" placeholder="e.g. STU001"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition bg-white" />
+                <p className="text-gray-400 text-xs mt-1">Ask your school admin for your child's Student ID</p>
+              </div>
             </div>
           </div>
 

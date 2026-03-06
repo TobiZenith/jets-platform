@@ -9,7 +9,7 @@ export default function SettingsPage() {
   const [success, setSuccess] = useState("")
   const [error, setError] = useState("")
   const [form, setForm] = useState({
-    schoolName: "", address: "", type: ""
+    schoolName: "", address: "", type: "", schoolCode: ""
   })
 
   useEffect(() => {
@@ -19,7 +19,8 @@ export default function SettingsPage() {
         setForm({
           schoolName: data.name || "",
           address: data.address || "",
-          type: data.type || ""
+          type: data.type || "",
+          schoolCode: data.code || ""
         })
       })
       .catch(() => {})
@@ -62,7 +63,6 @@ export default function SettingsPage() {
   return (
     <main className="min-h-screen bg-gray-50">
 
-      {/* Navbar */}
       <nav className="bg-white shadow-sm px-8 py-4 flex items-center justify-between sticky top-0 z-50">
         <img src="/images/logo.jpeg" alt="JETS" className="h-25 w-auto" />
         <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
@@ -71,8 +71,6 @@ export default function SettingsPage() {
       </nav>
 
       <div className="flex">
-
-        {/* Sidebar */}
         <aside className="w-64 min-h-screen bg-white shadow-sm px-4 py-8 hidden md:block">
           <p className="text-xs text-gray-400 uppercase font-bold mb-4 px-2">Main Menu</p>
           <nav className="flex flex-col gap-1">
@@ -88,10 +86,7 @@ export default function SettingsPage() {
             ].map((item, i) => (
               <a key={i} href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                  ${item.active
-                    ? "bg-gray-100 text-gray-800"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
-                  }`}>
+                  ${item.active ? "bg-gray-100 text-gray-800" : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"}`}>
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
               </a>
@@ -99,7 +94,6 @@ export default function SettingsPage() {
           </nav>
         </aside>
 
-        {/* Main Content */}
         <div className="flex-1 p-8">
           <div className="max-w-lg">
             <div className="mb-8">
@@ -118,6 +112,23 @@ export default function SettingsPage() {
                 {success}
               </div>
             )}
+
+            {/* School Code */}
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
+              <h2 className="text-lg font-bold text-gray-800 mb-2">🔑 School Code</h2>
+              <p className="text-gray-500 text-sm mb-4">Share this code with parents so they can register on the Parent Portal</p>
+              <div className="bg-white rounded-xl px-6 py-4 flex items-center justify-between border border-blue-200">
+                <span className="text-2xl font-extrabold text-blue-600 tracking-widest">{form.schoolCode || "Loading..."}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(form.schoolCode || "")
+                    alert("School code copied!")
+                  }}
+                  className="text-sm bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
+                  📋 Copy
+                </button>
+              </div>
+            </div>
 
             {/* Admin Info */}
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">

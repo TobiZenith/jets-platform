@@ -5,10 +5,32 @@ import bcrypt from "bcryptjs"
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { firstName, lastName, email, phone, password, studentId } = body
+    const { firstName, lastName, email, phone, password, studentId, schoolCode } = body
 
-    if (!firstName || !lastName || !email || !password || !studentId) {
+    if (!firstName || !lastName || !email || !password || !studentId || !schoolCode) {
       return NextResponse.json({ error: "Please fill in all fields" }, { status: 400 })
+    }
+
+    // Check if school code exists
+    const school = await prisma.school.findFirst({
+      where: { code: schoolCode }
+    })
+
+    if (!school) {
+      return NextResponse.json({ error: "Invalid school code. Please check with your school admin." }, { status: 400 })
+    }
+
+   // Check if student exists in that school
+    const student = await prisma.student.findUnique({
+      where: { studentId: studentId }
+    })
+    
+    console.log("School ID:", school.id)
+    console.log("Student found:", student)
+    console.log("Student schoolId:", student?.schoolId)
+    
+    if (!student || student.schoolId !== school.id) {
+      return NextResponse.json({ error: "Student ID not found in this school. Please check with your admin." }, { status: 400 })
     }
 
     // Check if parent already exists
@@ -20,20 +42,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "An account with this email already exists" }, { status: 400 })
     }
 
-    // Check if student exists
-    const student = await prisma.student.findUnique({
-      where: { studentId }
-    })
-
-    if (!student) {
-      return NextResponse.json({ error: "Student ID not found. Please check with your school admin." }, { status: 400 })
-    }
-
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create parent
-    const parent = await prisma.parent.create({
+    await prisma.parent.create({
       data: {
         firstName,
         lastName,
