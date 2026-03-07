@@ -30,10 +30,16 @@ export default function LoginPage() {
         redirect: false,
       })
 
-      if (result?.error) {
+  if (result?.error) {
         setError("Invalid email or password")
       } else {
-        router.push("/dashboard")
+        const sessionRes = await fetch("/api/auth/session")
+        const session = await sessionRes.json()
+        if (session?.user?.role === "superadmin") {
+          router.push("/superadmin")
+        } else {
+          router.push("/dashboard")
+        }
       }
     } catch (err) {
       setError("Something went wrong. Please try again.")
