@@ -13,15 +13,15 @@ export async function GET(req: Request) {
     const term = searchParams.get("term")
 
     if (!studentId || !term) {
-      return NextResponse.json({ error: "Student ID and term required" }, { status: 400 })
+      return NextResponse.json({ error: "Missing studentId or term" }, { status: 400 })
     }
 
+    // Fetch student with class and school separately
     const student = await prisma.student.findUnique({
       where: { id: studentId },
       include: {
-        grades: { where: { term } },
-        attendance: true,
         class: true,
+        school: true
       }
     })
 
@@ -29,8 +29,54 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Student not found" }, { status: 404 })
     }
 
-    return NextResponse.json(student)
+    // Fetch grades for this term
+    const grades = await prisma.grade.findMany({
+      where: { studentId, term }
+    })
+
+    // Fetch all attendance (no term field in schema)
+    const attendance = await prisma.attendance.findMany({
+      where: { studentId }
+    })
+
+    const totalAttendance = attendance.length
+    const presentCount = attendance.filter((a: any) => a.status === "present").length
+    const absentCount = attendance.filter((a: any) => a.status === "absent").length
+    const attendancePercentage = totalAttendance > 0
+      ? Math.round((presentCount / totalAttendance) * 100)
+      : 0
+
+    const totalScore = grades.reduce((sum: number, g: any) => sum + g.score, 0)
+    const averageScore = grades.length > 0
+      ? Math.round(totalScore / grades.length)
+      : 0
+
+    const overallRemark = averageScore >= 70
+      ? "Excellent"
+      : averageScore >= 50
+      ? "Good"
+      : "Needs Improvement"
+
+    return NextResponse.json({
+      student: {
+        name: `${student.firstName} ${student.lastName}`,
+        studentId: student.studentId,
+        class: student.class?.name || "N/A",
+        school: student.school?.name || "N/A"
+      },
+      term,
+      grades,
+      attendance: {
+        total: totalAttendance,
+        present: presentCount,
+        absent: absentCount,
+        percentage: attendancePercentage
+      },
+      averageScore,
+      overallRemark
+    })
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch report" }, { status: 500 })
+    if (error instanceof Error) console.error("Error:", error.message)
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
   }
 }
