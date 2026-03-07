@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-    const { firstName, lastName, studentId, classId } = body
+   const { firstName, lastName, studentId, classId, photo } = body
 
     if (!firstName || !lastName || !studentId) {
       return NextResponse.json({ error: "Please fill in all required fields" }, { status: 400 })
@@ -38,13 +38,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "A student with this ID already exists" }, { status: 400 })
     }
 
-    const student = await prisma.student.create({
+   const student = await prisma.student.create({
       data: {
         firstName,
         lastName,
         studentId,
         classId: classId || null,
         schoolId: user?.schoolId!,
+        photo: photo || null,
       }
     })
 

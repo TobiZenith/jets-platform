@@ -89,7 +89,16 @@ export default function StudentsPage() {
                   {students.map((student: any, i: number) => (
                     <tr key={i} className="border-b border-gray-50 hover:bg-gray-50 transition">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-gray-800">{student.firstName} {student.lastName}</div>
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-full overflow-hidden bg-blue-100 flex items-center justify-center text-sm font-bold text-blue-600 flex-shrink-0">
+                            {student.photo ? (
+                              <img src={student.photo} alt={student.firstName} className="w-full h-full object-cover" />
+                            ) : (
+                              <span>{student.firstName[0]}{student.lastName[0]}</span>
+                            )}
+                          </div>
+                          <div className="font-medium text-gray-800">{student.firstName} {student.lastName}</div>
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-gray-500 text-sm">{student.studentId}</td>
                       <td className="px-6 py-4 text-gray-500 text-sm">{student.class?.name || "No class"}</td>

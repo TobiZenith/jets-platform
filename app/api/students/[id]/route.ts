@@ -30,22 +30,23 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params
     const body = await req.json()
-    const { firstName, lastName, studentId, classId } = body
+    const { firstName, lastName, studentId, classId, photo } = body
 
     if (!firstName || !lastName || !studentId) {
       return NextResponse.json({ error: "Please fill in all required fields" }, { status: 400 })
     }
 
-    const student = await prisma.student.update({
+   const student = await prisma.student.update({
       where: { id },
       data: {
         firstName,
         lastName,
         studentId,
         classId: classId || null,
+        photo: photo || null,
       }
     })
-
+    
     return NextResponse.json(student)
   } catch (error) {
     if (error instanceof Error) console.error("Error:", error.message)

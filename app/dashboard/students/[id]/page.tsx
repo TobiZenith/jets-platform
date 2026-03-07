@@ -90,8 +90,12 @@ export default function StudentProfilePage() {
           <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl font-bold text-blue-600">
-                  {student.firstName[0]}{student.lastName[0]}
+                <div className="w-16 h-16 rounded-full overflow-hidden bg-blue-100 flex items-center justify-center text-2xl font-bold text-blue-600 flex-shrink-0">
+                  {student.photo ? (
+                    <img src={student.photo} alt={student.firstName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{student.firstName[0]}{student.lastName[0]}</span>
+                  )}
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-800">{student.firstName} {student.lastName}</h1>

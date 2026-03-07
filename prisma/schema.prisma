@@ -49,6 +49,7 @@ model Student {
   firstName String
   lastName  String
   studentId String   @unique
+  photo     String?
   class     Class?   @relation(fields: [classId], references: [id])
   classId   String?
   school    School   @relation(fields: [schoolId], references: [id])
