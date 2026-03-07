@@ -5,11 +5,19 @@ import { authOptions } from "../auth/[...nextauth]/route"
 
 export async function GET() {
   try {
-    const grades = await prisma.grade.findMany({
-      include: {
-        student: true
-      }
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user?.email! }
     })
+
+    const grades = await prisma.grade.findMany({
+      where: { student: { schoolId: user?.schoolId! } },
+      include: { student: true },
+      orderBy: { createdAt: "desc" }
+    })
+
     return NextResponse.json(grades)
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch grades" }, { status: 500 })

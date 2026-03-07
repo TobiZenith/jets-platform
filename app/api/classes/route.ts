@@ -5,12 +5,22 @@ import { authOptions } from "../auth/[...nextauth]/route"
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user?.email! }
+    })
+
     const classes = await prisma.class.findMany({
+      where: { schoolId: user?.schoolId! },
       include: {
         teacher: true,
         _count: { select: { students: true } }
-      }
+      },
+      orderBy: { name: "asc" }
     })
+
     return NextResponse.json(classes)
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch classes" }, { status: 500 })
@@ -34,11 +44,7 @@ export async function POST(req: Request) {
     }
 
     const newClass = await prisma.class.create({
-      data: {
-        name,
-        level,
-        schoolId: user?.schoolId!,
-      }
+      data: { name, level, schoolId: user?.schoolId! }
     })
 
     return NextResponse.json(newClass, { status: 201 })

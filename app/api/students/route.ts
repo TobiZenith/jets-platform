@@ -5,9 +5,22 @@ import { authOptions } from "../auth/[...nextauth]/route"
 
 export async function GET() {
   try {
-    const students = await prisma.student.findMany({
-      include: { class: true }
+    const session = await getServerSession(authOptions)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user?.email! }
     })
+
+    const students = await prisma.student.findMany({
+      where: { schoolId: user?.schoolId! },
+      include: { class: true },
+      orderBy: [
+        { firstName: "asc" },
+        { lastName: "asc" }
+      ]
+    })
+
     return NextResponse.json(students)
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch students" }, { status: 500 })
@@ -24,7 +37,7 @@ export async function POST(req: Request) {
     })
 
     const body = await req.json()
-   const { firstName, lastName, studentId, classId, photo } = body
+    const { firstName, lastName, studentId, classId, photo } = body
 
     if (!firstName || !lastName || !studentId) {
       return NextResponse.json({ error: "Please fill in all required fields" }, { status: 400 })
@@ -38,7 +51,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "A student with this ID already exists" }, { status: 400 })
     }
 
-   const student = await prisma.student.create({
+    const student = await prisma.student.create({
       data: {
         firstName,
         lastName,
