@@ -1,258 +1,197 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 
-const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-
-export default function TimetablePage() {
-  const [classes, setClasses] = useState<any[]>([])
-  const [selectedClass, setSelectedClass] = useState("")
-  const [timetable, setTimetable] = useState<any[]>([])
-  const [teachers, setTeachers] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
-  const [showForm, setShowForm] = useState(false)
-  const [error, setError] = useState("")
-  const [submitting, setSubmitting] = useState(false)
-  const [form, setForm] = useState({
-    day: "", subject: "", startTime: "", endTime: "", teacherId: ""
-  })
+export default function DashboardPage() {
+  const { data: session } = useSession()
+  const [stats, setStats] = useState({ students: 0, teachers: 0, classes: 0, announcements: 0 })
+  const [loading, setLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    fetch("/api/classes")
-      .then(res => res.json())
-      .then(data => setClasses(data))
-      .catch(() => {})
-
-    fetch("/api/teachers")
-      .then(res => res.json())
-      .then(data => setTeachers(data))
-      .catch(() => {})
-  }, [])
-
-  useEffect(() => {
-    if (!selectedClass) return
-    setLoading(true)
-    fetch(`/api/timetable?classId=${selectedClass}`)
+    fetch("/api/stats")
       .then(res => res.json())
       .then(data => {
-        setTimetable(data)
+        setStats(data)
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [selectedClass])
+  }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = async () => {
-    setError("")
-    if (!form.day || !form.subject || !form.startTime || !form.endTime) {
-      setError("Please fill in all required fields")
-      return
-    }
-    setSubmitting(true)
-    try {
-      const res = await fetch("/api/timetable", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, classId: selectedClass })
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.error || "Something went wrong")
-      } else {
-        setTimetable([...timetable, data])
-        setForm({ day: "", subject: "", startTime: "", endTime: "", teacherId: "" })
-        setShowForm(false)
-      }
-    } catch {
-      setError("Something went wrong")
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this slot?")) return
-    try {
-      const res = await fetch(`/api/timetable/${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setTimetable(timetable.filter(t => t.id !== id))
-      }
-    } catch {}
-  }
-
-  const getSlotsForDay = (day: string) => {
-    return timetable.filter(t => t.day === day).sort((a, b) => a.startTime.localeCompare(b.startTime))
-  }
+  const navItems = [
+    { icon: "🏠", label: "Dashboard", href: "/dashboard", active: true },
+    { icon: "🎓", label: "Students", href: "/dashboard/students" },
+    { icon: "👩‍🏫", label: "Teachers", href: "/dashboard/teachers" },
+    { icon: "📚", label: "Classes", href: "/dashboard/classes" },
+    { icon: "📊", label: "Grades", href: "/dashboard/grades" },
+    { icon: "📅", label: "Attendance", href: "/dashboard/attendance" },
+    { icon: "📢", label: "Announcements", href: "/dashboard/announcements" },
+    { icon: "💰", label: "Fees", href: "/dashboard/fees" },
+    { icon: "🗓️", label: "Timetable", href: "/dashboard/timetable" },
+    { icon: "📄", label: "Reports", href: "/dashboard/reports" },
+    { icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
+  ]
 
   return (
     <main className="min-h-screen bg-gray-50">
 
-      <nav className="bg-white shadow-sm px-8 py-4 flex items-center justify-between sticky top-0 z-50">
-        <img src="/images/logo.jpeg" alt="JETS" className="h-25 w-auto" />
-        <Link href="/dashboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
-          ← Back to Dashboard
-        </Link>
+      {/* Navbar */}
+      <nav className="bg-white shadow-sm px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-50">
+        <img src="/images/logo.jpeg" alt="JETS" className="h-10 md:h-14 w-auto" />
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500 hidden md:block">👤 {session?.user?.name}</span>
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="text-sm bg-red-50 text-red-500 px-4 py-2 rounded-full hover:bg-red-100 transition hidden md:block">
+            Sign Out
+          </button>
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-gray-600 text-2xl">
+            {mobileMenuOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </nav>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div className="absolute inset-0 bg-black opacity-40" onClick={() => setMobileMenuOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-72 bg-white shadow-xl px-4 py-8 z-50 overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <img src="/images/logo.jpeg" alt="JETS" className="h-10 w-auto" />
+              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-400 text-xl">✕</button>
+            </div>
+            <p className="text-xs text-gray-400 uppercase font-bold mb-4 px-2">Main Menu</p>
+            <nav className="flex flex-col gap-1">
+              {navItems.map((item, i) => (
+                <a key={i} href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition
+                    ${item.active ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-50"}`}>
+                  <span className="text-lg">{item.icon}</span>
+                  <span>{item.label}</span>
+                </a>
+              ))}
+            </nav>
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <p className="text-sm text-gray-500 px-2 mb-3">👤 {session?.user?.name}</p>
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-full text-sm bg-red-50 text-red-500 px-4 py-3 rounded-xl hover:bg-red-100 transition text-left">
+                🚪 Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex">
+
+        {/* Desktop Sidebar */}
         <aside className="w-64 min-h-screen bg-white shadow-sm px-4 py-8 hidden md:block">
           <p className="text-xs text-gray-400 uppercase font-bold mb-4 px-2">Main Menu</p>
           <nav className="flex flex-col gap-1">
-            {[
-              { icon: "🏠", label: "Dashboard", href: "/dashboard" },
-              { icon: "🎓", label: "Students", href: "/dashboard/students" },
-              { icon: "👩‍🏫", label: "Teachers", href: "/dashboard/teachers" },
-              { icon: "📚", label: "Classes", href: "/dashboard/classes" },
-              { icon: "📊", label: "Grades", href: "/dashboard/grades" },
-              { icon: "📅", label: "Attendance", href: "/dashboard/attendance" },
-              { icon: "📢", label: "Announcements", href: "/dashboard/announcements" },
-              { icon: "💰", label: "Fees", href: "/dashboard/fees" },
-              { icon: "🗓️", label: "Timetable", href: "/dashboard/timetable", active: true },
-              { icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
-            ].map((item, i) => (
+            {navItems.map((item, i) => (
               <a key={i} href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                  ${item.active ? "bg-purple-50 text-purple-600" : "text-gray-600 hover:bg-gray-50 hover:text-purple-600"}`}>
+                  ${item.active ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"}`}>
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
               </a>
             ))}
           </nav>
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="w-full text-sm bg-red-50 text-red-500 px-4 py-2.5 rounded-xl hover:bg-red-100 transition text-left">
+              🚪 Sign Out
+            </button>
+          </div>
         </aside>
 
-        <div className="flex-1 p-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">Timetable</h1>
-              <p className="text-gray-400 text-sm mt-1">Manage class schedules</p>
-            </div>
-            {selectedClass && (
-              <button
-                onClick={() => setShowForm(!showForm)}
-                className="bg-purple-600 text-white font-semibold px-6 py-2.5 rounded-full hover:bg-purple-700 transition text-sm">
-                {showForm ? "✕ Cancel" : "➕ Add Slot"}
-              </button>
-            )}
+        {/* Main Content */}
+        <div className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800">
+              Welcome back, {session?.user?.name?.split(" ")[0]}! 👋
+            </h1>
+            <p className="text-gray-400 text-sm mt-1">Here's what's happening in your school</p>
           </div>
 
-          {/* Class Selector */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-            <label className="text-sm font-medium text-gray-700 mb-2 block">Select Class</label>
-            <select
-              value={selectedClass}
-              onChange={e => setSelectedClass(e.target.value)}
-              className="w-full md:w-72 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition">
-              <option value="">Choose a class...</option>
-              {classes.map((cls: any) => (
-                <option key={cls.id} value={cls.id}>{cls.name}</option>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+            {[
+              { label: "Students", value: stats.students, icon: "🎓", color: "bg-blue-50", textColor: "text-blue-600", href: "/dashboard/students" },
+              { label: "Teachers", value: stats.teachers, icon: "👩‍🏫", color: "bg-green-50", textColor: "text-green-600", href: "/dashboard/teachers" },
+              { label: "Classes", value: stats.classes, icon: "📚", color: "bg-yellow-50", textColor: "text-yellow-600", href: "/dashboard/classes" },
+              { label: "Announcements", value: stats.announcements, icon: "📢", color: "bg-purple-50", textColor: "text-purple-600", href: "/dashboard/announcements" },
+            ].map((stat, i) => (
+              <Link key={i} href={stat.href}
+                className={`${stat.color} rounded-2xl p-4 md:p-6 hover:shadow-md transition`}>
+                <div className="text-2xl md:text-3xl mb-2">{stat.icon}</div>
+                <p className={`text-2xl md:text-3xl font-extrabold ${stat.textColor}`}>
+                  {loading ? "..." : stat.value}
+                </p>
+                <p className="text-gray-500 text-xs md:text-sm mt-1">{stat.label}</p>
+              </Link>
+            ))}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6">
+            <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: "Add Student", href: "/dashboard/students/new", color: "bg-blue-600", icon: "🎓" },
+                { label: "Mark Attendance", href: "/dashboard/attendance", color: "bg-green-600", icon: "📅" },
+                { label: "Add Grades", href: "/dashboard/grades", color: "bg-yellow-500", icon: "📊" },
+                { label: "Announce", href: "/dashboard/announcements", color: "bg-purple-600", icon: "📢" },
+              ].map((action, i) => (
+                <Link key={i} href={action.href}
+                  className={`${action.color} text-white rounded-xl p-3 md:p-4 text-center hover:opacity-90 transition`}>
+                  <div className="text-xl md:text-2xl mb-1">{action.icon}</div>
+                  <p className="text-xs md:text-sm font-semibold">{action.label}</p>
+                </Link>
               ))}
-            </select>
+            </div>
           </div>
 
-          {/* Add Slot Form */}
-          {showForm && (
-            <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Add Timetable Slot</h2>
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">
-                  {error}
-                </div>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">Day *</label>
-                  <select name="day" value={form.day} onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition">
-                    <option value="">Select day</option>
-                    {DAYS.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">Subject *</label>
-                  <input name="subject" value={form.subject} onChange={handleChange} type="text" placeholder="e.g. Mathematics"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">Teacher</label>
-                  <select name="teacherId" value={form.teacherId} onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition">
-                    <option value="">Select teacher</option>
-                    {teachers.map((t: any) => (
-                      <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">Start Time *</label>
-                  <input name="startTime" value={form.startTime} onChange={handleChange} type="time"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">End Time *</label>
-                  <input name="endTime" value={form.endTime} onChange={handleChange} type="time"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-400 transition" />
-                </div>
-              </div>
-              <button
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="mt-4 bg-purple-600 text-white font-bold py-3 px-8 rounded-xl hover:bg-purple-700 transition disabled:opacity-50">
-                {submitting ? "Adding..." : "Add Slot 🗓️"}
-              </button>
+          {/* All Sections Grid */}
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-6">
+            <h2 className="text-lg font-bold text-gray-800 mb-4">All Sections</h2>
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
+              {navItems.filter(i => !i.active).map((item, i) => (
+                <a key={i} href={item.href}
+                  className="flex flex-col items-center gap-2 p-3 md:p-4 rounded-xl hover:bg-gray-50 transition text-center">
+                  <span className="text-2xl md:text-3xl">{item.icon}</span>
+                  <span className="text-xs text-gray-600 font-medium">{item.label}</span>
+                </a>
+              ))}
             </div>
-          )}
-
-          {/* Timetable Grid */}
-          {selectedClass && (
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              {loading ? (
-                <div className="text-center text-gray-400 py-12">Loading timetable...</div>
-              ) : (
-                <div className="grid grid-cols-5 divide-x divide-gray-100">
-                  {DAYS.map(day => (
-                    <div key={day}>
-                      <div className="bg-purple-50 px-3 py-3 text-center">
-                        <p className="text-xs font-bold text-purple-600 uppercase">{day}</p>
-                      </div>
-                      <div className="p-2 min-h-48 flex flex-col gap-2">
-                        {getSlotsForDay(day).length === 0 ? (
-                          <p className="text-gray-300 text-xs text-center mt-4">No slots</p>
-                        ) : (
-                          getSlotsForDay(day).map((slot: any, i: number) => (
-                            <div key={i} className="bg-purple-50 border border-purple-100 rounded-xl p-2 relative group">
-                              <p className="text-xs font-bold text-purple-700">{slot.subject}</p>
-                              <p className="text-xs text-gray-400">{slot.startTime} - {slot.endTime}</p>
-                              {slot.teacher && (
-                                <p className="text-xs text-gray-400">{slot.teacher.firstName}</p>
-                              )}
-                              <button
-                                onClick={() => handleDelete(slot.id)}
-                                className="absolute top-1 right-1 text-red-400 hover:text-red-600 text-xs opacity-0 group-hover:opacity-100 transition">
-                                ✕
-                              </button>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {!selectedClass && (
-            <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-              <div className="text-5xl mb-4">🗓️</div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Select a Class</h3>
-              <p className="text-gray-400 text-sm">Choose a class above to view or edit its timetable</p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 flex items-center justify-around md:hidden z-40">
+        {[
+          { icon: "🏠", label: "Home", href: "/dashboard" },
+          { icon: "🎓", label: "Students", href: "/dashboard/students" },
+          { icon: "📅", label: "Attendance", href: "/dashboard/attendance" },
+          { icon: "💰", label: "Fees", href: "/dashboard/fees" },
+          { icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
+        ].map((item, i) => (
+          <a key={i} href={item.href}
+            className="flex flex-col items-center gap-1 px-2 py-1">
+            <span className="text-xl">{item.icon}</span>
+            <span className="text-xs text-gray-500">{item.label}</span>
+          </a>
+        ))}
+      </div>
+
     </main>
   )
 }
