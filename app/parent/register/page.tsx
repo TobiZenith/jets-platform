@@ -50,7 +50,7 @@ export default function ParentRegisterPage() {
 
         <div className="text-center mb-8">
           <a href="/" className="inline-block hover:opacity-80 transition mb-2">
-            <img src="/images/logo.jpeg" alt="JETS" className="h-25 w-auto mx-auto" />
+            <img src="/images/logo.jpeg" alt="JETS" className="h-14 w-auto mx-auto" />
           </a>
           <h2 className="text-xl font-bold text-gray-800">Parent Registration</h2>
           <p className="text-gray-400 text-sm mt-1">Create an account to monitor your child's progress</p>
@@ -63,71 +63,73 @@ export default function ParentRegisterPage() {
         )}
 
         <div className="flex flex-col gap-4">
+
+          {/* Personal Info */}
           <div className="bg-blue-50 rounded-2xl p-4">
             <p className="text-blue-600 font-bold text-sm mb-3">👤 Your Information</p>
             <div className="flex flex-col gap-3">
               <div className="flex gap-3">
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
-                  <input name="firstName" onChange={handleChange} type="text" placeholder="John"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder="John"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
                 <div className="flex-1">
                   <label className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
-                  <input name="lastName" onChange={handleChange} type="text" placeholder="Doe"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder="Doe"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
                 </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Email Address</label>
-                <input name="email" onChange={handleChange} type="email" placeholder="parent@email.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="parent@email.com"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Phone Number</label>
-                <input name="phone" onChange={handleChange} type="tel" placeholder="+234 800 000 0000"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition bg-white" />
+                <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder="+234 800 000 0000"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition bg-white" />
               </div>
             </div>
           </div>
 
+          {/* School Info */}
           <div className="bg-green-50 rounded-2xl p-4">
             <p className="text-green-600 font-bold text-sm mb-3">🏫 School Information</p>
             <div className="flex flex-col gap-3">
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">School Code</label>
-                <input name="schoolCode" onChange={handleChange} type="text" placeholder="e.g. JETS-ABC123"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition bg-white" />
+                <input name="schoolCode" value={form.schoolCode} onChange={handleChange} type="text" placeholder="e.g. JETS-ABC123"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-green-400 transition bg-white" />
                 <p className="text-gray-400 text-xs mt-1">Ask your school admin for the school code</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Child's Student ID</label>
-                <input name="studentId" onChange={handleChange} type="text" placeholder="e.g. STU001"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-400 transition bg-white" />
+                <input name="studentId" value={form.studentId} onChange={handleChange} type="text" placeholder="e.g. STU001"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-green-400 transition bg-white" />
                 <p className="text-gray-400 text-xs mt-1">Ask your school admin for your child's Student ID</p>
               </div>
             </div>
           </div>
 
+          {/* Password */}
           <div className="bg-yellow-50 rounded-2xl p-4">
             <p className="text-yellow-600 font-bold text-sm mb-3">🔐 Set Your Password</p>
             <div className="flex flex-col gap-3">
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Password</label>
-                <input name="password" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400 transition bg-white" />
+                <input name="password" value={form.password} onChange={handleChange} type="password" placeholder="••••••••"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition bg-white" />
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Confirm Password</label>
-                <input name="confirmPassword" onChange={handleChange} type="password" placeholder="••••••••"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-400 transition bg-white" />
+                <input name="confirmPassword" value={form.confirmPassword} onChange={handleChange} type="password" placeholder="••••••••"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition bg-white" />
               </div>
             </div>
           </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
+          <button onClick={handleSubmit} disabled={loading}
             className="bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition mt-2 disabled:opacity-50">
             {loading ? "Creating Account..." : "Create Parent Account 👨‍👩‍👧"}
           </button>
@@ -141,4 +143,3 @@ export default function ParentRegisterPage() {
       </div>
     </main>
   )
-}

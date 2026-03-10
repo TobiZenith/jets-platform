@@ -67,12 +67,12 @@ export default function ParentLoginPage() {
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Email Address</label>
             <input name="email" onChange={handleChange} type="email" placeholder="parent@email.com"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition" />
+             className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition" />
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700 mb-1 block">Password</label>
             <input name="password" onChange={handleChange} type="password" placeholder="••••••••"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 transition" />
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition" />
           </div>
 
           <button
