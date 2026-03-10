@@ -13,7 +13,8 @@ const navItems = [
   { icon: "📢", label: "Announcements", href: "/dashboard/announcements" },
   { icon: "💰", label: "Fees", href: "/dashboard/fees" },
   { icon: "🗓️", label: "Timetable", href: "/dashboard/timetable" },
-  { icon: "📄", label: "Reports", href: "/dashboard/reports" },
+ { icon: "📄", label: "Reports", href: "/dashboard/reports" },
+{ icon: "🪪", label: "ID Cards", href: "/dashboard/id-cards" },
   { icon: "⚙️", label: "Settings", href: "/dashboard/settings" },
 ]
 
