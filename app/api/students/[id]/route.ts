@@ -7,7 +7,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     const student = await prisma.student.findUnique({
       where: { id },
-      include: { class: true }
+      include: { class: true, school: true }
     })
 
     const grades = await prisma.grade.findMany({
@@ -46,7 +46,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         photo: photo || null,
       }
     })
-    
+
     return NextResponse.json(student)
   } catch (error) {
     if (error instanceof Error) console.error("Error:", error.message)
