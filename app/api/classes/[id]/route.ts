@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "../../../lib/prisma"
+import bcrypt from "bcryptjs"
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -18,7 +19,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params
     const body = await req.json()
-    const { name, level } = body
+    const { name, level, teacherId, teacherPassword } = body
 
     if (!name || !level) {
       return NextResponse.json({ error: "Please fill in all fields" }, { status: 400 })
@@ -26,8 +27,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     const cls = await prisma.class.update({
       where: { id },
-      data: { name, level }
+      data: { name, level, teacherId: teacherId || null }
     })
+
+    // If a teacher is being assigned and password is provided, set their password
+    if (teacherId && teacherPassword) {
+      const hashed = await bcrypt.hash(teacherPassword, 10)
+      await prisma.teacher.update({
+        where: { id: teacherId },
+        data: { password: hashed }
+      })
+    }
 
     return NextResponse.json(cls)
   } catch (error) {

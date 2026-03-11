@@ -72,6 +72,7 @@ model Teacher {
   lastName  String
   email     String   @unique
   subject   String
+  password  String?
   school    School   @relation(fields: [schoolId], references: [id])
   schoolId  String
   createdAt DateTime @default(now())
