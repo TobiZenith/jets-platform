@@ -7,17 +7,34 @@ export default function ParentRegisterPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [form, setForm] = useState({
-    firstName: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", studentId: "", schoolCode: ""
+    firstName: "", lastName: "", email: "", phone: "", password: "", confirmPassword: "", schoolCode: ""
   })
+  const [studentIds, setStudentIds] = useState([""])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const handleStudentIdChange = (index: number, value: string) => {
+    const updated = [...studentIds]
+    updated[index] = value
+    setStudentIds(updated)
+  }
+
+  const addStudentId = () => {
+    if (studentIds.length < 5) setStudentIds([...studentIds, ""])
+  }
+
+  const removeStudentId = (index: number) => {
+    if (studentIds.length === 1) return
+    setStudentIds(studentIds.filter((_, i) => i !== index))
+  }
+
   const handleSubmit = async () => {
     setError("")
-    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.studentId || !form.schoolCode) {
-      setError("Please fill in all fields")
+    const filledIds = studentIds.filter(id => id.trim() !== "")
+    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.schoolCode || filledIds.length === 0) {
+      setError("Please fill in all fields and add at least one student ID")
       return
     }
     if (form.password !== form.confirmPassword) {
@@ -29,7 +46,7 @@ export default function ParentRegisterPage() {
       const res = await fetch("/api/parent/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify({ ...form, studentIds: filledIds })
       })
       const data = await res.json()
       if (!res.ok) {
@@ -57,9 +74,7 @@ export default function ParentRegisterPage() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">
-            {error}
-          </div>
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">{error}</div>
         )}
 
         <div className="flex flex-col gap-4">
@@ -103,11 +118,34 @@ export default function ParentRegisterPage() {
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-green-400 transition bg-white" />
                 <p className="text-gray-400 text-xs mt-1">Ask your school admin for the school code</p>
               </div>
+
+              {/* Multiple Student IDs */}
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Child's Student ID</label>
-                <input name="studentId" value={form.studentId} onChange={handleChange} type="text" placeholder="e.g. STU001"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-green-400 transition bg-white" />
-                <p className="text-gray-400 text-xs mt-1">Ask your school admin for your child's Student ID</p>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">Children's Student IDs</label>
+                <div className="flex flex-col gap-2">
+                  {studentIds.map((id, index) => (
+                    <div key={index} className="flex gap-2 items-center">
+                      <input
+                        value={id}
+                        onChange={(e) => handleStudentIdChange(index, e.target.value)}
+                        type="text"
+                        placeholder={`e.g. STU00${index + 1}`}
+                        className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-green-400 transition bg-white"
+                      />
+                      {studentIds.length > 1 && (
+                        <button onClick={() => removeStudentId(index)}
+                          className="text-red-400 hover:text-red-600 text-xl font-bold px-2">×</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {studentIds.length < 5 && (
+                  <button onClick={addStudentId}
+                    className="mt-2 text-green-600 text-sm font-semibold hover:underline">
+                    + Add another child
+                  </button>
+                )}
+                <p className="text-gray-400 text-xs mt-1">Ask your school admin for each child's Student ID</p>
               </div>
             </div>
           </div>
