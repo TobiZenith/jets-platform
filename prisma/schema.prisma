@@ -179,3 +179,13 @@ model ParentStudent {
   student   Student @relation(fields: [studentId], references: [id])
   studentId String
 }
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  type      String
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
