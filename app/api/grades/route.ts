@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route"
 import jwt from "jsonwebtoken"
 import { Client } from "pg"
+import { sendEmail, gradeEmailHtml } from "../../lib/sendEmail"
 
 export async function GET(req: Request) {
   try {
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
         await client.connect()
 
         let query = `
-          SELECT g.*, 
+          SELECT g.*,
             json_build_object(
               'id', s.id,
               'firstName', s."firstName",
@@ -90,7 +91,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please fill in all fields" }, { status: 400 })
     }
 
-    // Use direct pg for both admin and teacher to avoid adapter issues
     const client = new Client({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })
     await client.connect()
 
@@ -101,7 +101,6 @@ export async function POST(req: Request) {
       [studentId, subject, parseFloat(score), term]
     )
 
-    // Get student info
     const studentResult = await client.query(
       `SELECT id, "firstName", "lastName", "studentId" FROM "Student" WHERE id = $1`,
       [studentId]
@@ -109,9 +108,27 @@ export async function POST(req: Request) {
 
     await client.end()
 
-    const grade = {
-      ...result.rows[0],
-      student: studentResult.rows[0]
+    const grade = { ...result.rows[0], student: studentResult.rows[0] }
+
+    // Send email to parents
+    try {
+      const student = await prisma.student.findUnique({
+        where: { id: studentId },
+        include: { parents: { include: { parent: true } } }
+      })
+
+      if (student) {
+        const studentName = `${student.firstName} ${student.lastName}`
+        for (const ps of student.parents) {
+          await sendEmail({
+            to: ps.parent.email,
+            subject: `New Grade for ${studentName} - ${subject}`,
+            html: gradeEmailHtml(studentName, subject, parseFloat(score), term)
+          })
+        }
+      }
+    } catch (e) {
+      console.error("Failed to send grade email:", e)
     }
 
     return NextResponse.json(grade, { status: 201 })
