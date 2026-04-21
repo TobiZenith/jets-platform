@@ -1,4 +1,4 @@
-"use client"
+ï»¿"use client"
 import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -13,9 +13,7 @@ function ResetPasswordForm() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
 
-  useEffect(() => {
-    if (!token) setError("Invalid reset link")
-  }, [token])
+  useEffect(() => { if (!token) setError("Invalid reset link") }, [token])
 
   const handleSubmit = async () => {
     setError("")
@@ -43,13 +41,13 @@ function ResetPasswordForm() {
           <a href="/" className="inline-block hover:opacity-80 transition mb-4">
             <img src="/images/logo.jpeg" alt="JETS" className="h-14 w-auto mx-auto" />
           </a>
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">??</div>
+          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">&#128274;</div>
           <h2 className="text-xl font-bold text-gray-800">Reset Password</h2>
           <p className="text-gray-400 text-sm mt-1">Enter your new password below</p>
         </div>
         {success ? (
           <div className="text-center">
-            <div className="text-5xl mb-4">?</div>
+            <div className="text-5xl mb-4">&#9989;</div>
             <h3 className="text-lg font-bold text-gray-800 mb-2">Password Reset!</h3>
             <p className="text-gray-500 text-sm mb-6">Your password has been reset. Redirecting to login...</p>
             <Link href="/login" className="text-yellow-600 font-semibold hover:underline text-sm">Go to Login</Link>
@@ -59,17 +57,17 @@ function ResetPasswordForm() {
             {error && <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">{error}</div>}
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">New Password</label>
-              <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="••••••••"
+              <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Enter new password"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition" />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">Confirm Password</label>
-              <input value={confirm} onChange={e => setConfirm(e.target.value)} type="password" placeholder="••••••••"
+              <input value={confirm} onChange={e => setConfirm(e.target.value)} type="password" placeholder="Confirm new password"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition" />
             </div>
             <button onClick={handleSubmit} disabled={loading || !token}
               className="bg-yellow-500 text-white font-bold py-3 rounded-xl hover:bg-yellow-600 transition mt-2 disabled:opacity-50">
-              {loading ? "Resetting..." : "Reset Password ??"}
+              {loading ? "Resetting..." : "Reset Password"}
             </button>
           </div>
         )}
