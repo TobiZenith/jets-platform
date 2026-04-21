@@ -90,7 +90,7 @@ export default function ParentLoginPage() {
         </div>
 
         <p className="text-center text-sm text-gray-500">
-          Don't have an account?{" "}
+          Forgot your password? <a href="/parent/forgot-password" className="text-blue-600 font-semibold hover:underline">Reset it here</a></p><p className="text-center text-sm text-gray-500 mt-2">Don't have an account?{" "}
           <a href="/parent/register" className="text-blue-600 font-semibold hover:underline">
             Register here
           </a>

@@ -31,28 +31,28 @@ function ResetPasswordForm() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || "Something went wrong") }
-      else { setSuccess(true); setTimeout(() => router.push("/login"), 3000) }
+      else { setSuccess(true); setTimeout(() => router.push("/parent/login"), 3000) }
     } catch { setError("Something went wrong") }
     finally { setLoading(false) }
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-blue-50 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 flex items-center justify-center px-4">
       <div className="bg-white rounded-3xl shadow-lg p-10 w-full max-w-md">
         <div className="text-center mb-8">
           <a href="/" className="inline-block hover:opacity-80 transition mb-4">
             <img src="/images/logo.jpeg" alt="JETS" className="h-14 w-auto mx-auto" />
           </a>
-          <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">??</div>
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">??</div>
           <h2 className="text-xl font-bold text-gray-800">Reset Password</h2>
           <p className="text-gray-400 text-sm mt-1">Enter your new password below</p>
         </div>
         {success ? (
           <div className="text-center">
             <div className="text-5xl mb-4">?</div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Password Reset!</h3>
+            <h3 className="text-lg font-bold text="gray-800 mb-2">Password Reset!</h3>
             <p className="text-gray-500 text-sm mb-6">Your password has been reset. Redirecting to login...</p>
-            <Link href="/login" className="text-yellow-600 font-semibold hover:underline text-sm">Go to Login</Link>
+            <Link href="/parent/login" className="text-blue-600 font-semibold hover:underline text-sm">Go to Login</Link>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -60,15 +60,15 @@ function ResetPasswordForm() {
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">New Password</label>
               <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="••••••••"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition" />
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition" />
             </div>
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">Confirm Password</label>
               <input value={confirm} onChange={e => setConfirm(e.target.value)} type="password" placeholder="••••••••"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-yellow-400 transition" />
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-400 transition" />
             </div>
             <button onClick={handleSubmit} disabled={loading || !token}
-              className="bg-yellow-500 text-white font-bold py-3 rounded-xl hover:bg-yellow-600 transition mt-2 disabled:opacity-50">
+              className="bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition mt-2 disabled:opacity-50">
               {loading ? "Resetting..." : "Reset Password ??"}
             </button>
           </div>
@@ -78,7 +78,7 @@ function ResetPasswordForm() {
   )
 }
 
-export default function ResetPasswordPage() {
+export default function ParentResetPasswordPage() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-gray-400">Loading...</div></div>}>
       <ResetPasswordForm />
