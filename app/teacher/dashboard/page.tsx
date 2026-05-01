@@ -190,7 +190,7 @@ export default function TeacherDashboard() {
             <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center text-2xl">&#128105;&#8205;&#127979;</div>
             <div>
               <h1 className="text-xl font-bold text-gray-800">{teacher.firstName} {teacher.lastName}</h1>
-              <p className="text-gray-500 text-sm">{teacher.subject} Teacher — {teacher.schoolName}</p>
+              <p className="text-gray-500 text-sm">{teacher.subject} Teacher  {teacher.schoolName}</p>
               <p className="text-gray-400 text-sm">Class: {teacher.classes?.[0]?.name || "No class assigned"}</p>
             </div>
           </div>
