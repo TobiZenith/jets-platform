@@ -187,28 +187,43 @@ export default function SettingsPage() {
             <p className="text-xs text-gray-400 mt-2">Total: {grading.caWeight + grading.examWeight}% {grading.caWeight + grading.examWeight === 100 ? "✅" : "❌ Must be 100"}</p>
           </div>
 
-          {/* Grade Boundaries */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
-            <h3 className="text-sm font-bold text-gray-700 mb-3">Grade Boundaries</h3>
-            <div className="grid grid-cols-4 gap-2 mb-2">
-              <span className="text-xs font-bold text-gray-400 uppercase">Grade</span>
-              <span className="text-xs font-bold text-gray-400 uppercase">Min</span>
-              <span className="text-xs font-bold text-gray-400 uppercase">Max</span>
-              <span className="text-xs font-bold text-gray-400 uppercase">Remark</span>
-            </div>
-            {grading.boundaries.map((b, i) => (
-              <div key={i} className="grid grid-cols-4 gap-2 mb-2">
-                <input value={b.grade} onChange={e => handleBoundaryChange(i, "grade", e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
-                <input type="number" value={b.min} onChange={e => handleBoundaryChange(i, "min", e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
-                <input type="number" value={b.max} onChange={e => handleBoundaryChange(i, "max", e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
-                <input value={b.remark} onChange={e => handleBoundaryChange(i, "remark", e.target.value)}
-                  className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
-              </div>
-            ))}
-          </div>
+         {/* Grade Boundaries */}
+<div className="bg-gray-50 rounded-xl p-4 mb-4">
+  <div className="flex items-center justify-between mb-3">
+    <h3 className="text-sm font-bold text-gray-700">Grade Boundaries</h3>
+    <button onClick={() => setGrading({ ...grading, boundaries: [...grading.boundaries, { grade: "", min: 0, max: 0, remark: "" }] })}
+      className="text-xs bg-yellow-500 text-white px-3 py-1.5 rounded-full hover:bg-yellow-600 font-semibold">
+      + Add Grade
+    </button>
+  </div>
+  <div className="grid grid-cols-5 gap-2 mb-2">
+    <span className="text-xs font-bold text-gray-400 uppercase">Grade</span>
+    <span className="text-xs font-bold text-gray-400 uppercase">Min</span>
+    <span className="text-xs font-bold text-gray-400 uppercase">Max</span>
+    <span className="text-xs font-bold text-gray-400 uppercase">Remark</span>
+    <span className="text-xs font-bold text-gray-400 uppercase">Action</span>
+  </div>
+  {grading.boundaries.map((b, i) => (
+    <div key={i} className="grid grid-cols-5 gap-2 mb-2">
+      <input value={b.grade} onChange={e => handleBoundaryChange(i, "grade", e.target.value)}
+        placeholder="A"
+        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+      <input type="number" value={b.min} onChange={e => handleBoundaryChange(i, "min", e.target.value)}
+        placeholder="0"
+        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+      <input type="number" value={b.max} onChange={e => handleBoundaryChange(i, "max", e.target.value)}
+        placeholder="100"
+        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+      <input value={b.remark} onChange={e => handleBoundaryChange(i, "remark", e.target.value)}
+        placeholder="Excellent"
+        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+      <button onClick={() => setGrading({ ...grading, boundaries: grading.boundaries.filter((_, idx) => idx !== i) })}
+        className="text-red-400 hover:text-red-600 text-xs font-semibold">
+        Remove
+      </button>
+    </div>
+  ))}
+</div>
 
           <button onClick={handleSaveGrading} disabled={savingGrading}
             className="w-full bg-yellow-500 text-white font-bold py-3 rounded-xl hover:bg-yellow-600 transition disabled:opacity-50">
