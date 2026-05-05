@@ -196,29 +196,29 @@ export default function SettingsPage() {
       + Add Grade
     </button>
   </div>
-  <div className="grid grid-cols-5 gap-2 mb-2">
-    <span className="text-xs font-bold text-gray-400 uppercase">Grade</span>
-    <span className="text-xs font-bold text-gray-400 uppercase">Min</span>
-    <span className="text-xs font-bold text-gray-400 uppercase">Max</span>
-    <span className="text-xs font-bold text-gray-400 uppercase">Remark</span>
-    <span className="text-xs font-bold text-gray-400 uppercase">Action</span>
+  <div className="flex gap-2 mb-2">
+    <span className="text-xs font-bold text-gray-400 uppercase w-16">Grade</span>
+    <span className="text-xs font-bold text-gray-400 uppercase w-16">Min</span>
+    <span className="text-xs font-bold text-gray-400 uppercase w-16">Max</span>
+    <span className="text-xs font-bold text-gray-400 uppercase flex-1">Remark</span>
+    <span className="text-xs font-bold text-gray-400 uppercase w-16">Action</span>
   </div>
   {grading.boundaries.map((b, i) => (
-    <div key={i} className="grid grid-cols-5 gap-2 mb-2">
+    <div key={i} className="flex gap-2 mb-2 items-center">
       <input value={b.grade} onChange={e => handleBoundaryChange(i, "grade", e.target.value)}
         placeholder="A"
-        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+        className="w-16 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
       <input type="number" value={b.min} onChange={e => handleBoundaryChange(i, "min", e.target.value)}
         placeholder="0"
-        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+        className="w-16 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
       <input type="number" value={b.max} onChange={e => handleBoundaryChange(i, "max", e.target.value)}
         placeholder="100"
-        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+        className="w-16 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
       <input value={b.remark} onChange={e => handleBoundaryChange(i, "remark", e.target.value)}
         placeholder="Excellent"
-        className="border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
+        className="flex-1 border border-gray-200 rounded-lg px-2 py-2 text-sm text-gray-800 focus:outline-none focus:border-blue-400" />
       <button onClick={() => setGrading({ ...grading, boundaries: grading.boundaries.filter((_, idx) => idx !== i) })}
-        className="text-red-400 hover:text-red-600 text-xs font-semibold">
+        className="w-16 text-red-400 hover:text-red-600 text-xs font-semibold">
         Remove
       </button>
     </div>
