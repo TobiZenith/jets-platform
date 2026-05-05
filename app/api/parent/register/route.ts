@@ -11,9 +11,11 @@ export async function POST(req: Request) {
   const client = getClient()
   try {
     const body = await req.json()
-    const { firstName, lastName, email, phone, password, studentId, schoolCode } = body
+    const { firstName, lastName, email, phone, password, schoolCode, studentIds, studentId } = body
 
-    if (!firstName || !lastName || !email || !password || !studentId || !schoolCode) {
+    const ids = studentIds || (studentId ? [studentId] : [])
+
+    if (!firstName || !lastName || !email || !password || !schoolCode || ids.length === 0) {
       return NextResponse.json({ error: "Please fill in all fields" }, { status: 400 })
     }
 
@@ -25,14 +27,17 @@ export async function POST(req: Request) {
     }
     const school = schoolResult.rows[0]
 
-    const studentResult = await client.query(
-      `SELECT * FROM "Student" WHERE "studentId" = $1 AND "schoolId" = $2`,
-      [studentId, school.id]
-    )
-    if (studentResult.rows.length === 0) {
-      return NextResponse.json({ error: "Student ID not found in this school. Please check with your admin." }, { status: 400 })
+    const students = []
+    for (const sid of ids) {
+      const studentResult = await client.query(
+        `SELECT * FROM "Student" WHERE "studentId" = $1 AND "schoolId" = $2`,
+        [sid.trim(), school.id]
+      )
+      if (studentResult.rows.length === 0) {
+        return NextResponse.json({ error: `Student ID "${sid}" not found in this school.` }, { status: 400 })
+      }
+      students.push(studentResult.rows[0])
     }
-    const student = studentResult.rows[0]
 
     const existingParent = await client.query(`SELECT id FROM "Parent" WHERE email = $1`, [email])
     if (existingParent.rows.length > 0) {
@@ -41,7 +46,6 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10)
     const parentId = crypto.randomUUID()
-    const linkId = crypto.randomUUID()
 
     await client.query(
       `INSERT INTO "Parent" (id, "firstName", "lastName", email, phone, password, "createdAt")
@@ -49,10 +53,13 @@ export async function POST(req: Request) {
       [parentId, firstName, lastName, email, phone || "", hashedPassword]
     )
 
-    await client.query(
-      `INSERT INTO "ParentStudent" (id, "parentId", "studentId") VALUES ($1, $2, $3)`,
-      [linkId, parentId, student.id]
-    )
+    for (const student of students) {
+      const linkId = crypto.randomUUID()
+      await client.query(
+        `INSERT INTO "ParentStudent" (id, "parentId", "studentId") VALUES ($1, $2, $3)`,
+        [linkId, parentId, student.id]
+      )
+    }
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
