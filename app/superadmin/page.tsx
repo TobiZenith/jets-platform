@@ -130,9 +130,9 @@ export default function SuperAdminPage() {
                     <td className="px-6 py-4">
                       <span className="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-full capitalize">{school.type}</span>
                     </td>
-                    <td className="px-6 py-4 text-center text-white font-bold">{school._count.students}</td>
-                    <td className="px-6 py-4 text-center text-white font-bold">{school._count.teachers}</td>
-                    <td className="px-6 py-4 text-center text-white font-bold">{school._count.classes}</td>
+                    <td className="px-6 py-4 text-center text-white font-bold">{school.studentCount}</td>
+                    <td className="px-6 py-4 text-center text-white font-bold">{school.teacherCount}</td>
+                    <td className="px-6 py-4 text-center text-white font-bold">{school.classCount}</td>
                     <td className="px-6 py-4 text-gray-400 text-sm">{new Date(school.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4">
                       <button

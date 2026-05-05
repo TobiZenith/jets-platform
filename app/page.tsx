@@ -88,31 +88,30 @@
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-8 bg-gray-50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Everything You Need</h2>
-            <p className="text-gray-500 text-lg">Built for modern schools of all sizes</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {[
-              { icon: "&#127891;", title: "Student Management", desc: "Add, edit and track all students with photos and ID cards" },
-              { icon: "&#128197;", title: "Attendance Tracking", desc: "Calendar-based attendance with bulk marking and history" },
-              { icon: "&#128202;", title: "Grades & Reports", desc: "Record grades by subject and term, send to parents" },
-              { icon: "&#128184;", title: "Fee Management", desc: "Track fee payments and outstanding balances" },
-              { icon: "&#128203;", title: "Timetable", desc: "Set and manage class schedules for all classes" },
-              { icon: "&#129338;", title: "ID Card Designer", desc: "Custom student ID cards with your school logo and colors" },
-            ].map((f, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition">
-                <div className="text-3xl mb-3">{f.icon}</div>
-                <h3 className="font-bold text-gray-800 mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-sm">{f.desc}</p>
-              </div>
-            ))}
-          </div>
+<section id="features" className="py-20 px-8 bg-gray-50">
+  <div className="max-w-5xl mx-auto">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Everything You Need</h2>
+      <p className="text-gray-500 text-lg">Built for modern schools of all sizes</p>
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {[
+        { icon: "🎓", title: "Student Management", desc: "Add, edit and track all students with photos and ID cards" },
+        { icon: "📅", title: "Attendance Tracking", desc: "Calendar-based attendance with bulk marking and history" },
+        { icon: "📊", title: "Grades & Reports", desc: "Record grades by subject and term, send to parents" },
+        { icon: "💰", title: "Fee Management", desc: "Track fee payments and outstanding balances" },
+        { icon: "📋", title: "Timetable", desc: "Set and manage class schedules for all classes" },
+        { icon: "🪪", title: "ID Card Designer", desc: "Custom student ID cards with your school logo and colors" },
+      ].map((f, i) => (
+        <div key={i} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+          <div className="text-3xl mb-3">{f.icon}</div>
+          <h3 className="font-bold text-gray-800 mb-2">{f.title}</h3>
+          <p className="text-gray-500 text-sm">{f.desc}</p>
         </div>
-      </section>
-
+      ))}
+    </div>
+  </div>
+</section>
       {/* How It Works */}
       <section id="how-it-works" className="py-20 px-8 bg-white">
         <div className="max-w-4xl mx-auto text-center">
