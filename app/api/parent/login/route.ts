@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { Client } from "pg"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 function getClient() {
   return new Client({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })
@@ -26,7 +27,13 @@ export async function POST(req: Request) {
        WHERE ps."parentId" = $1`,
       [parent.id]
     )
+    const token = jwt.sign(
+      { parentId: parent.id },
+      process.env.NEXTAUTH_SECRET || "jets-super-secret-key-2026",
+      { expiresIn: "7d" }
+    )
     return NextResponse.json({
+      token,
       parent: {
         id: parent.id,
         firstName: parent.firstName,

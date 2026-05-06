@@ -36,16 +36,16 @@ export default function ParentDashboardPage() {
     if (!parentData || !token) { router.push("/parent/login"); return }
     const parsedParent = JSON.parse(parentData)
     setParent(parsedParent)
-    if (parsedParent.children && parsedParent.children.length > 0) {
-      fetchStudentData(parsedParent.children[0].student.id, token)
-    } else {
-      setLoading(false)
-    }
+   if (parsedParent.children && parsedParent.children.length > 0) {
+  fetchStudentData(parsedParent.children[0].id, token)
+} else {
+  setLoading(false)
+}
   }, [router])
 
   const handleChildSwitch = (index: number) => {
     const token = localStorage.getItem("parentToken")
-    const studentId = parent.children[index].student.id
+    const studentId = parent.children[index].id
     setSelectedIndex(index)
     fetchStudentData(studentId, token!)
   }
