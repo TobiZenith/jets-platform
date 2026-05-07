@@ -107,7 +107,9 @@ export default function GradesPage() {
     finally { setSending(false) }
   }
 
-  const studentGrades = grades.filter(g => g.studentId === selectedStudent)
+  const caMax = gradingSettings?.caWeight || 40
+  const examMax = gradingSettings?.examWeight || 60
+
   const uniqueStudentsWithGrades = [...new Set(grades.map(g => g.studentId))]
     .map(sid => {
       const studentGradeList = grades.filter(g => g.studentId === sid)
@@ -125,7 +127,6 @@ export default function GradesPage() {
         <p className="text-gray-400 text-sm mt-1">Enter and manage student grades by subject and term</p>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-2 mb-6 bg-white rounded-2xl shadow-sm p-2 max-w-sm">
         {["entry", "results"].map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
@@ -135,7 +136,6 @@ export default function GradesPage() {
         ))}
       </div>
 
-      {/* Filters */}
       <div className="bg-white rounded-2xl shadow-sm p-4 mb-6 flex flex-wrap gap-4">
         <select value={selectedClass} onChange={e => { setSelectedClass(e.target.value); setSelectedStudent("") }}
           className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:border-yellow-400">
@@ -164,7 +164,7 @@ export default function GradesPage() {
             <h2 className="font-bold text-gray-800">Enter Scores</h2>
             {gradingSettings && (
               <span className="text-xs text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full">
-                CA: {gradingSettings.caWeight}% | Exam: {gradingSettings.examWeight}%
+                CA: out of {caMax} | Exam: out of {examMax} | Total: 100
               </span>
             )}
           </div>
@@ -175,13 +175,13 @@ export default function GradesPage() {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[500px]">
+                <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="text-left text-xs text-gray-400 uppercase border-b border-gray-100">
                       <th className="pb-3 font-semibold">Subject</th>
-                      <th className="pb-3 font-semibold">CA ({gradingSettings?.caWeight || 40}%)</th>
-                      <th className="pb-3 font-semibold">Exam ({gradingSettings?.examWeight || 60}%)</th>
-                      <th className="pb-3 font-semibold">Total</th>
+                      <th className="pb-3 font-semibold">CA (out of {caMax})</th>
+                      <th className="pb-3 font-semibold">Exam (out of {examMax})</th>
+                      <th className="pb-3 font-semibold">Total (100)</th>
                       <th className="pb-3 font-semibold">Grade</th>
                       <th className="pb-3 font-semibold">Remark</th>
                     </tr>
@@ -191,24 +191,24 @@ export default function GradesPage() {
                       const score = scores[s.id] || { caScore: "", examScore: "" }
                       const ca = parseFloat(score.caScore) || 0
                       const exam = parseFloat(score.examScore) || 0
-                      const total = gradingSettings ? (ca * gradingSettings.caWeight / 100) + (exam * gradingSettings.examWeight / 100) : ca + exam
+                      const total = ca + exam
                       const gradeInfo = gradingSettings?.boundaries?.find((b: any) => total >= b.min && total <= b.max)
                       return (
                         <tr key={s.id} className="border-b border-gray-50">
                           <td className="py-3 text-sm font-medium text-gray-800">{s.name}</td>
                           <td className="py-3">
-                            <input type="number" min="0" max="100" value={score.caScore}
+                            <input type="number" min="0" max={caMax} value={score.caScore}
                               onChange={e => setScores(prev => ({ ...prev, [s.id]: { ...prev[s.id], caScore: e.target.value } }))}
                               className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:border-yellow-400" />
                           </td>
                           <td className="py-3">
-                            <input type="number" min="0" max="100" value={score.examScore}
+                            <input type="number" min="0" max={examMax} value={score.examScore}
                               onChange={e => setScores(prev => ({ ...prev, [s.id]: { ...prev[s.id], examScore: e.target.value } }))}
                               className="w-20 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:border-yellow-400" />
                           </td>
                           <td className="py-3 text-sm font-bold text-gray-800">{(score.caScore || score.examScore) ? total.toFixed(1) : "-"}</td>
                           <td className="py-3">
-                            <span className={`text-sm font-bold ${gradeInfo?.grade === "A" ? "text-green-600" : gradeInfo?.grade === "F" ? "text-red-600" : "text-yellow-600"}`}>
+                            <span className={`text-sm font-bold ${gradeInfo?.grade === "A" ? "text-green-600" : gradeInfo?.grade === "F" || !gradeInfo ? "text-red-600" : "text-yellow-600"}`}>
                               {(score.caScore || score.examScore) ? gradeInfo?.grade || "-" : "-"}
                             </span>
                           </td>
@@ -250,27 +250,27 @@ export default function GradesPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {uniqueStudentsWithGrades.map((item, i) => (
-  <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3 flex-wrap gap-3">
-    <div>
-      <p className="font-semibold text-gray-800 text-sm">{item.student?.firstName} {item.student?.lastName}</p>
-      <p className="text-xs text-gray-400">{item.count} subjects | Average: {item.avg}%</p>
-    </div>
-    <div className="flex items-center gap-2 flex-wrap">
-      <span className={`text-xs font-bold px-3 py-1 rounded-full ${item.published ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
-        {item.published ? "Published" : "Unpublished"}
-      </span>
-      <button onClick={() => handlePublish(item.studentId, !item.published)} disabled={publishing === item.studentId}
-        className={`text-xs font-bold px-3 py-2 rounded-full transition ${item.published ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-green-500 text-white hover:bg-green-600"}`}>
-        {publishing === item.studentId ? "..." : item.published ? "Unpublish" : "Publish"}
-      </button>
-      <a href={`/dashboard/report-card?studentId=${item.studentId}&term=${encodeURIComponent(selectedTerm)}`}
-        target="_blank"
-        className="text-xs font-bold px-3 py-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 transition">
-        View Report Card
-      </a>
-    </div>
-  </div>
-))}
+                <div key={i} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3 flex-wrap gap-3">
+                  <div>
+                    <p className="font-semibold text-gray-800 text-sm">{item.student?.firstName} {item.student?.lastName}</p>
+                    <p className="text-xs text-gray-400">{item.count} subjects | Average: {item.avg}%</p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${item.published ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-600"}`}>
+                      {item.published ? "Published" : "Unpublished"}
+                    </span>
+                    <button onClick={() => handlePublish(item.studentId, !item.published)} disabled={publishing === item.studentId}
+                      className={`text-xs font-bold px-3 py-2 rounded-full transition ${item.published ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-green-500 text-white hover:bg-green-600"}`}>
+                      {publishing === item.studentId ? "..." : item.published ? "Unpublish" : "Publish"}
+                    </button>
+                    <a href={`/dashboard/report-card?studentId=${item.studentId}&term=${encodeURIComponent(selectedTerm)}`}
+                      target="_blank"
+                      className="text-xs font-bold px-3 py-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 transition">
+                      View Report Card
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

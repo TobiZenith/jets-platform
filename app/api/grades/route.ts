@@ -97,7 +97,7 @@ export async function POST(req: Request) {
       examWeight = settingsResult.rows[0].examWeight
       boundaries = settingsResult.rows[0].boundaries
     }
-    const total = (parseFloat(caScore) * caWeight / 100) + (parseFloat(examScore) * examWeight / 100)
+    const total = parseFloat(caScore) + parseFloat(examScore)
     const { grade, remark } = calcGrade(total, boundaries)
     const existing = await client.query(
       `SELECT id FROM "Grade" WHERE "studentId" = $1 AND subject = $2 AND term = $3`,
